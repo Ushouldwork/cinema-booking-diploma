@@ -143,8 +143,10 @@
 .film-form { display: grid; gap: 8px; margin-bottom: 25px; }
 .film-form textarea { min-height: 80px; resize: vertical; }
 .drag-help { color: #63536c; }
+.touch-drag-help { display: none; color: #63536c; }
 .film-library { display: flex; flex-wrap: wrap; gap: 15px; margin: 20px 0 30px; }
 .film-chip { position: relative; display: flex; width: 250px; min-height: 52px; border: 1px solid rgba(0,0,0,.3); background: #caff85; cursor: grab; }
+.film-chip.is-touch-selected { outline: 3px solid #63536c; outline-offset: 2px; }
 .film-chip--1 { background: #85ff89; }.film-chip--2 { background: #85ffd3; }.film-chip--3 { background: #85e2ff; }.film-chip--4 { background: #8599ff; }
 .film-chip img { width: 38px; object-fit: cover; }
 .film-chip > span { display: flex; min-width: 0; padding: 7px 10px; flex: 1; flex-direction: column; }
@@ -289,7 +291,9 @@ body.has-modal { overflow: hidden; }
   .admin-seat { width: 20px; height: 20px; }
   .admin-hall__row .admin-seat { flex-basis: 20px; }
   .price-fields label { grid-template-columns: 100px 90px 1fr; }
-  .film-chip { width: 100%; }
+  .drag-help { display: none; }
+  .touch-drag-help { display: block; }
+  .film-chip { width: 100%; touch-action: pan-y; }
   .admin-modal {
     padding: 120px 0 30px;
     background-image: url('../images/admin-popup-mobile.jpg');

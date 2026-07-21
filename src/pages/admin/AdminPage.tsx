@@ -1,4 +1,4 @@
-import { type DragEvent, type FormEvent, useEffect, useMemo, useState } from 'react'
+import { type DragEvent, type FormEvent, type TouchEvent, useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { cinemaApi } from '../../api/CinemaApi'
 import '../../assets/styles/admin.css'
@@ -35,6 +35,7 @@ const AdminPage = () => {
   const [posterName, setPosterName] = useState('')
   const [modal, setModal] = useState<'hall' | 'film' | 'seance' | null>(null)
   const [pendingSeance, setPendingSeance] = useState({ hallId: 0, filmId: 0, time: '00:00' })
+  const [touchFilmId, setTouchFilmId] = useState<number | null>(null)
 
   const selectedHall = useMemo(
     () => data.halls.find((hall) => hall.id === selectedHallId) ?? null,
@@ -152,15 +153,39 @@ const AdminPage = () => {
     event.dataTransfer.effectAllowed = 'copy'
   }
 
-  const addSeanceByDrop = (event: DragEvent, hallId: number) => {
+  const openSeanceModal = (hallId: number, filmId: number, clientX: number, timeline: HTMLElement) => {
+    const rect = timeline.getBoundingClientRect()
+    const minutes = Math.round(Math.max(0, Math.min(1435, ((clientX - rect.left) / rect.width) * 1440)) / 5) * 5
+    const time = `${String(Math.floor(minutes / 60)).padStart(2, '0')}:${String(minutes % 60).padStart(2, '0')}`
+    setPendingSeance({ hallId, filmId, time })
+    setTouchFilmId(null)
+    setModal('seance')
+  }
+
+  const addSeanceByDrop = (event: DragEvent<HTMLDivElement>, hallId: number) => {
     event.preventDefault()
     const filmId = Number(event.dataTransfer.getData('filmId'))
     if (!filmId) return
-    const rect = event.currentTarget.getBoundingClientRect()
-    const minutes = Math.round(Math.max(0, Math.min(1435, ((event.clientX - rect.left) / rect.width) * 1440)) / 5) * 5
-    const time = `${String(Math.floor(minutes / 60)).padStart(2, '0')}:${String(minutes % 60).padStart(2, '0')}`
-    setPendingSeance({ hallId, filmId, time })
-    setModal('seance')
+    openSeanceModal(hallId, filmId, event.clientX, event.currentTarget)
+  }
+
+  const addSeanceByTouch = (event: TouchEvent<HTMLElement>, filmId: number) => {
+    const touch = event.changedTouches[0]
+    if (!touch) return
+    const timeline = document.elementFromPoint(touch.clientX, touch.clientY)?.closest<HTMLElement>('.timeline[data-hall-id]')
+    if (!timeline) return
+    const hallId = Number(timeline.dataset.hallId)
+    if (!hallId) return
+    event.preventDefault()
+    openSeanceModal(hallId, filmId, touch.clientX, timeline)
+  }
+
+  const addSelectedFilmByTouch = (event: TouchEvent<HTMLDivElement>, hallId: number) => {
+    if (!touchFilmId) return
+    const touch = event.changedTouches[0]
+    if (!touch) return
+    event.preventDefault()
+    openSeanceModal(hallId, touchFilmId, touch.clientX, event.currentTarget)
   }
 
   const deleteSeanceByDrop = (event: DragEvent) => {
@@ -224,8 +249,39 @@ const AdminPage = () => {
             setModal('film')
           }}>Добавить фильм</button>
           <p className="drag-help">Перетащите фильм на шкалу нужного зала. Положение определяет время начала.</p>
-          <div className="film-library">{data.films.map((film, index) => <article className={`film-chip film-chip--${index % 5}`} draggable onDragStart={(event) => startFilmDrag(event, film)} key={film.id}><img src={film.film_poster} alt="" /><span><strong>{film.film_name}</strong><small>{film.film_duration} минут</small></span><button className="icon-button" type="button" aria-label={`Удалить ${film.film_name}`} onClick={() => void runAction(() => cinemaApi.deleteFilm(film.id))}>×</button></article>)}</div>
-          <div className="timelines">{data.halls.map((hall) => <div className="timeline-row" key={hall.id}><strong>{hall.hall_name}</strong><div className="timeline" onDragOver={(event) => event.preventDefault()} onDrop={(event) => addSeanceByDrop(event, hall.id)}>{data.seances.filter((seance) => seance.seance_hallid === hall.id).map((seance) => { const film = data.films.find((item) => item.id === seance.seance_filmid); const [hours, minutes] = seance.seance_time.split(':').map(Number); return <div className="timeline__seance" draggable onDragStart={(event) => { event.dataTransfer.setData('seanceId', String(seance.id)); event.dataTransfer.effectAllowed = 'move' }} style={{ left: `${((hours * 60 + minutes) / 1440) * 100}%`, width: `${Math.max(5, ((film?.film_duration ?? 60) / 1440) * 100)}%` }} key={seance.id}><span>{film?.film_name}</span><time>{seance.seance_time}</time></div>})}</div></div>)}</div>
+          <p className="touch-drag-help">На телефоне коснитесь фильма, затем шкалы нужного зала.</p>
+          <div className="film-library">{data.films.map((film, index) => (
+            <article
+              className={`film-chip film-chip--${index % 5}${touchFilmId === film.id ? ' is-touch-selected' : ''}`}
+              draggable
+              onDragStart={(event) => startFilmDrag(event, film)}
+              onTouchStart={() => setTouchFilmId(film.id)}
+              onTouchEnd={(event) => addSeanceByTouch(event, film.id)}
+              key={film.id}
+            >
+              <img src={film.film_poster} alt="" />
+              <span><strong>{film.film_name}</strong><small>{film.film_duration} минут</small></span>
+              <button className="icon-button" type="button" aria-label={`Удалить ${film.film_name}`} onTouchStart={(event) => event.stopPropagation()} onClick={() => void runAction(() => cinemaApi.deleteFilm(film.id))}>×</button>
+            </article>
+          ))}</div>
+          <div className="timelines">{data.halls.map((hall) => (
+            <div className="timeline-row" key={hall.id}>
+              <strong>{hall.hall_name}</strong>
+              <div
+                className="timeline"
+                data-hall-id={hall.id}
+                onDragOver={(event) => event.preventDefault()}
+                onDrop={(event) => addSeanceByDrop(event, hall.id)}
+                onTouchEnd={(event) => addSelectedFilmByTouch(event, hall.id)}
+              >
+                {data.seances.filter((seance) => seance.seance_hallid === hall.id).map((seance) => {
+                  const film = data.films.find((item) => item.id === seance.seance_filmid)
+                  const [hours, minutes] = seance.seance_time.split(':').map(Number)
+                  return <div className="timeline__seance" draggable onDragStart={(event) => { event.dataTransfer.setData('seanceId', String(seance.id)); event.dataTransfer.effectAllowed = 'move' }} style={{ left: `${((hours * 60 + minutes) / 1440) * 100}%`, width: `${Math.max(5, ((film?.film_duration ?? 60) / 1440) * 100)}%` }} key={seance.id}><span>{film?.film_name}</span><time>{seance.seance_time}</time></div>
+                })}
+              </div>
+            </div>
+          ))}</div>
           <div className="seance-trash" onDragOver={(event) => event.preventDefault()} onDrop={deleteSeanceByDrop}>Перетащите сюда сеанс, чтобы удалить</div>
         </AdminSection>
 
