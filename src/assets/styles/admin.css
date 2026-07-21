@@ -249,8 +249,30 @@ body.has-modal { overflow: hidden; }
   margin-top: 34px;
 }
 
-.upload-button { position: relative; cursor: pointer; }
-.upload-button input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+.file-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  border: 0;
+  clip-path: inset(50%);
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.upload-button { cursor: pointer; }
+
+.poster-name {
+  margin: 5px 0 -12px;
+  color: #848484;
+  font-size: 13px;
+  text-align: center;
+}
+
+.poster-name.is-selected {
+  color: #0a7178;
+  font-weight: 500;
+}
 
 @media (max-width: 600px) {
   .page--admin { padding-right: 0; padding-left: 0; }

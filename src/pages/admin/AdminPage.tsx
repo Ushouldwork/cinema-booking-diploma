@@ -32,6 +32,7 @@ const AdminPage = () => {
   const [priceStandart, setPriceStandart] = useState(0)
   const [priceVip, setPriceVip] = useState(0)
   const [newHallName, setNewHallName] = useState('')
+  const [posterName, setPosterName] = useState('')
   const [modal, setModal] = useState<'hall' | 'film' | 'seance' | null>(null)
   const [pendingSeance, setPendingSeance] = useState({ hallId: 0, filmId: 0, time: '00:00' })
 
@@ -218,7 +219,10 @@ const AdminPage = () => {
         </AdminSection>
 
         <AdminSection title="Сетка сеансов">
-          <button className="button admin-button" type="button" onClick={() => setModal('film')}>Добавить фильм</button>
+          <button className="button admin-button" type="button" onClick={() => {
+            setPosterName('')
+            setModal('film')
+          }}>Добавить фильм</button>
           <p className="drag-help">Перетащите фильм на шкалу нужного зала. Положение определяет время начала.</p>
           <div className="film-library">{data.films.map((film, index) => <article className={`film-chip film-chip--${index % 5}`} draggable onDragStart={(event) => startFilmDrag(event, film)} key={film.id}><img src={film.film_poster} alt="" /><span><strong>{film.film_name}</strong><small>{film.film_duration} минут</small></span><button className="icon-button" type="button" aria-label={`Удалить ${film.film_name}`} onClick={() => void runAction(() => cinemaApi.deleteFilm(film.id))}>×</button></article>)}</div>
           <div className="timelines">{data.halls.map((hall) => <div className="timeline-row" key={hall.id}><strong>{hall.hall_name}</strong><div className="timeline" onDragOver={(event) => event.preventDefault()} onDrop={(event) => addSeanceByDrop(event, hall.id)}>{data.seances.filter((seance) => seance.seance_hallid === hall.id).map((seance) => { const film = data.films.find((item) => item.id === seance.seance_filmid); const [hours, minutes] = seance.seance_time.split(':').map(Number); return <div className="timeline__seance" draggable onDragStart={(event) => { event.dataTransfer.setData('seanceId', String(seance.id)); event.dataTransfer.effectAllowed = 'move' }} style={{ left: `${((hours * 60 + minutes) / 1440) * 100}%`, width: `${Math.max(5, ((film?.film_duration ?? 60) / 1440) * 100)}%` }} key={seance.id}><span>{film?.film_name}</span><time>{seance.seance_time}</time></div>})}</div></div>)}</div>
@@ -254,9 +258,21 @@ const AdminPage = () => {
             <label>Продолжительность фильма (мин.)<input name="duration" type="number" min="1" required /></label>
             <label>Описание фильма<textarea name="description" required /></label>
             <label>Страна<input name="origin" required /></label>
+            <input
+              className="file-input"
+              id="film-poster"
+              name="poster"
+              type="file"
+              accept="image/*"
+              required
+              onChange={(event) => setPosterName(event.target.files?.[0]?.name ?? '')}
+            />
+            <p className={`poster-name${posterName ? ' is-selected' : ''}`}>
+              {posterName ? `Выбран файл: ${posterName}` : 'Постер пока не выбран'}
+            </p>
             <div className="admin-modal__actions">
               <button className="button admin-button" type="submit" disabled={busy}>Добавить фильм</button>
-              <label className="button admin-button upload-button">Загрузить постер<input name="poster" type="file" accept="image/*" required /></label>
+              <label className="button admin-button upload-button" htmlFor="film-poster">Загрузить постер</label>
               <button className="button button--secondary" type="button" onClick={() => setModal(null)}>Отменить</button>
             </div>
           </form>
