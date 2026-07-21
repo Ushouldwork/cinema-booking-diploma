@@ -290,7 +290,10 @@ body.has-modal { overflow: hidden; }
   .admin-hall__row .admin-seat { flex-basis: 20px; }
   .price-fields label { grid-template-columns: 100px 90px 1fr; }
   .film-chip { width: 100%; }
-  .admin-modal { padding: 120px 0 30px; }
+  .admin-modal {
+    padding: 120px 0 30px;
+    background-image: url('../images/admin-popup-mobile.jpg');
+  }
   .admin-modal__dialog { width: 100%; }
   .admin-modal__header { padding: 14px 16px; }
   .admin-modal__header h2 { font-size: 18px; }
