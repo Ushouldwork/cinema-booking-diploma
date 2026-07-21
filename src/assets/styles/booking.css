@@ -153,6 +153,13 @@ button.chair {
 }
 
 @media (max-width: 600px) {
+  .page--guest-hall {
+    background-image: url('../images/hall-mobile.jpg');
+    background-position: center top;
+    background-size: cover;
+    background-attachment: scroll;
+  }
+
   .buying__content {
     border-radius: 0;
   }

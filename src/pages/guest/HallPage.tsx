@@ -93,7 +93,7 @@ const HallPage = () => {
   }
 
   return (
-    <div className="page page--guest">
+    <div className="page page--guest page--guest-hall">
       <Header />
       <main className="buying">
         {!data && !error && <Loader text="Загружаем схему зала…" />}
