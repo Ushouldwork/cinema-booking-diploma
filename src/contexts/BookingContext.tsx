@@ -39,7 +39,8 @@ const readStoredBooking = () => {
 const readStoredTickets = () => {
   try {
     const value = sessionStorage.getItem(TICKETS_STORAGE_KEY)
-    return value ? (JSON.parse(value) as PurchasedTicket[]) : []
+    const tickets: unknown = value ? JSON.parse(value) : []
+    return Array.isArray(tickets) ? (tickets as PurchasedTicket[]) : []
   } catch {
     return []
   }

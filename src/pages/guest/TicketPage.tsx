@@ -1,21 +1,31 @@
 import { useEffect, useMemo, useState } from 'react'
 import QRCode from 'qrcode'
-import { Navigate } from 'react-router-dom'
+import { Navigate, useLocation } from 'react-router-dom'
 import '../../assets/styles/ticket.css'
 import Header from '../../components/common/Header'
 import Loader from '../../components/common/Loader'
 import { useBooking } from '../../contexts/BookingContext'
 
 const TicketPage = () => {
+  const location = useLocation()
   const { purchasedTickets } = useBooking()
+  const routeTickets = (location.state as { tickets?: typeof purchasedTickets } | null)?.tickets
+  const ticketsForQr = useMemo(
+    () => purchasedTickets.length > 0
+      ? purchasedTickets
+      : Array.isArray(routeTickets)
+        ? routeTickets
+        : [],
+    [purchasedTickets, routeTickets],
+  )
   const [qrCode, setQrCode] = useState('')
   const [error, setError] = useState('')
 
   const qrText = useMemo(() => {
-    if (purchasedTickets.length === 0) return ''
+    if (ticketsForQr.length === 0) return ''
 
-    const first = purchasedTickets[0]
-    const tickets = purchasedTickets
+    const first = ticketsForQr[0]
+    const tickets = ticketsForQr
       .map(
         (ticket) =>
           `Билет №${ticket.id}: ряд ${ticket.ticket_row}, место ${ticket.ticket_place}, стоимость ${ticket.ticket_price} руб.`,
@@ -30,7 +40,7 @@ const TicketPage = () => {
       tickets,
       'Билет действителен строго на свой сеанс',
     ].join('\n')
-  }, [purchasedTickets])
+  }, [ticketsForQr])
 
   useEffect(() => {
     if (!qrText) return
@@ -40,12 +50,12 @@ const TicketPage = () => {
       .catch(() => setError('Не удалось сформировать QR-код'))
   }, [qrText])
 
-  if (purchasedTickets.length === 0) {
+  if (ticketsForQr.length === 0) {
     return <Navigate to="/payment" replace />
   }
 
-  const first = purchasedTickets[0]
-  const seats = purchasedTickets
+  const first = ticketsForQr[0]
+  const seats = ticketsForQr
     .map((ticket) => `${ticket.ticket_row} ряд, ${ticket.ticket_place} место`)
     .join('; ')
 
