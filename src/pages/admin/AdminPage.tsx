@@ -29,8 +29,8 @@ const AdminPage = () => {
   const [rows, setRows] = useState(1)
   const [places, setPlaces] = useState(1)
   const [config, setConfig] = useState<SeatType[][]>([['standart']])
-  const [priceStandart, setPriceStandart] = useState(0)
-  const [priceVip, setPriceVip] = useState(0)
+  const [priceStandart, setPriceStandart] = useState('0')
+  const [priceVip, setPriceVip] = useState('0')
   const [newHallName, setNewHallName] = useState('')
   const [posterName, setPosterName] = useState('')
   const [modal, setModal] = useState<'hall' | 'film' | 'seance' | null>(null)
@@ -72,8 +72,8 @@ const AdminPage = () => {
     setRows(selectedHall.hall_rows)
     setPlaces(selectedHall.hall_places)
     setConfig(resizeConfig(selectedHall, selectedHall.hall_rows, selectedHall.hall_places))
-    setPriceStandart(selectedHall.hall_price_standart)
-    setPriceVip(selectedHall.hall_price_vip)
+    setPriceStandart(String(selectedHall.hall_price_standart))
+    setPriceVip(String(selectedHall.hall_price_vip))
   }, [selectedHall])
 
   const runAction = async (action: () => Promise<unknown>) => {
@@ -197,9 +197,9 @@ const AdminPage = () => {
           {selectedHall && <>
             <p>Укажите количество рядов и максимальное количество кресел в ряду:</p>
             <div className="size-fields">
-              <label>Рядов, шт<input type="number" min="1" max="20" value={rows} onChange={(event) => changeSize(Number(event.target.value), places)} /></label>
+              <label>Рядов, шт<input type="number" min="1" max="20" value={rows} onFocus={(event) => event.currentTarget.select()} onChange={(event) => changeSize(Number(event.target.value), places)} /></label>
               <span>×</span>
-              <label>Мест, шт<input type="number" min="1" max="20" value={places} onChange={(event) => changeSize(rows, Number(event.target.value))} /></label>
+              <label>Мест, шт<input type="number" min="1" max="20" value={places} onFocus={(event) => event.currentTarget.select()} onChange={(event) => changeSize(rows, Number(event.target.value))} /></label>
             </div>
             <p>Нажимайте на кресла, чтобы менять их тип:</p>
             <div className="admin-seat-legend"><span><i className="admin-seat standart" /> обычные</span><span><i className="admin-seat vip" /> VIP</span><span><i className="admin-seat disabled" /> заблокированные</span></div>
@@ -213,8 +213,8 @@ const AdminPage = () => {
           <div className="hall-tabs">{data.halls.map((hall) => <button className={hall.id === selectedHallId ? 'is-active' : ''} key={hall.id} type="button" onClick={() => setSelectedHallId(hall.id)}>{hall.hall_name}</button>)}</div>
           {selectedHall && <>
             <p>Установите цены для типов кресел:</p>
-            <div className="price-fields"><label>Цена, рублей<input type="number" min="0" value={priceStandart} onChange={(event) => setPriceStandart(Number(event.target.value))} /> обычные кресла</label><label>Цена, рублей<input type="number" min="0" value={priceVip} onChange={(event) => setPriceVip(Number(event.target.value))} /> VIP кресла</label></div>
-            <div className="admin-actions"><button className="button admin-button" type="button" disabled={busy} onClick={() => void runAction(() => cinemaApi.updateHallPrices(selectedHall.id, priceStandart, priceVip))}>Сохранить</button></div>
+            <div className="price-fields"><label>Цена, рублей<input type="number" min="0" value={priceStandart} onFocus={(event) => event.currentTarget.select()} onChange={(event) => setPriceStandart(event.target.value)} /> обычные кресла</label><label>Цена, рублей<input type="number" min="0" value={priceVip} onFocus={(event) => event.currentTarget.select()} onChange={(event) => setPriceVip(event.target.value)} /> VIP кресла</label></div>
+            <div className="admin-actions"><button className="button admin-button" type="button" disabled={busy || priceStandart === '' || priceVip === ''} onClick={() => void runAction(() => cinemaApi.updateHallPrices(selectedHall.id, Number(priceStandart), Number(priceVip)))}>Сохранить</button></div>
           </>}
         </AdminSection>
 
