@@ -1,0 +1,171 @@
+.page--admin {
+  min-height: 100vh;
+  background: linear-gradient(rgba(0, 0, 0, .5), rgba(0, 0, 0, .5)), url('../images/cinema-background.jpg') center top / cover fixed;
+}
+
+.login-card,
+.admin-panel {
+  width: min(100%, 962px);
+  margin: 0 auto;
+}
+
+.login-card {
+  width: min(100%, 480px);
+  padding-bottom: 35px;
+  background: rgba(234, 233, 235, .95);
+}
+
+.login-card h1 {
+  margin: 0 0 20px;
+  padding: 16px;
+  background: #63536c;
+  color: #fff;
+  font-size: 22px;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.login-card form {
+  display: flex;
+  width: 272px;
+  margin: auto;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.login-card label,
+.film-form label,
+.size-fields label,
+.price-fields label {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  color: #848484;
+  font-size: 12px;
+}
+
+.login-card input,
+.inline-form input,
+.film-form input,
+.film-form textarea,
+.size-fields input,
+.price-fields input {
+  min-height: 36px;
+  padding: 7px 9px;
+  border: 1px solid #b7b7b7;
+  background: #fff;
+  color: #000;
+  font-size: 16px;
+}
+
+.login-card .admin-button { margin: 10px auto 0; }
+.form-error,
+.admin-alert { color: #a90000; }
+.admin-alert { margin: 0; padding: 15px 42px; background: #fff0f0; }
+
+.admin-section {
+  position: relative;
+  background: rgba(234, 233, 235, .95);
+}
+
+.admin-section::before {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 61px;
+  width: 2px;
+  background: #bc95d6;
+  content: '';
+}
+
+.admin-section__title {
+  position: relative;
+  z-index: 1;
+  min-height: 95px;
+  margin: 0;
+  padding: 35px 70px 35px 104px;
+  background: #63536c;
+  color: #fff;
+  font-size: 22px;
+  line-height: 25px;
+  text-transform: uppercase;
+}
+
+.admin-section__title::before {
+  position: absolute;
+  top: 26px;
+  left: 40px;
+  width: 36px;
+  height: 36px;
+  border: 4px solid #bc95d6;
+  border-radius: 50%;
+  background: #fff;
+  content: '';
+}
+
+.admin-section__body {
+  position: relative;
+  padding: 35px 42px 35px 104px;
+}
+
+.admin-section__body > p:first-child { margin-top: 0; }
+.hall-list { margin: 8px 0 22px; padding: 0 0 0 25px; list-style: none; }
+.hall-list li { min-height: 25px; text-transform: uppercase; }
+.icon-button { width: 22px; height: 22px; margin-left: 5px; padding: 0; border: 0; border-radius: 3px; background: #fff; box-shadow: 0 2px 3px #999; cursor: pointer; }
+.admin-button,
+.button--secondary { min-height: 40px; padding: 10px 30px; cursor: pointer; }
+.button--secondary { background: #fff; color: #63536c; }
+.inline-form,
+.admin-actions { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+.inline-form input { width: min(100%, 300px); }
+.hall-tabs { display: flex; flex-wrap: wrap; margin: 10px 0 30px; }
+.hall-tabs button { min-height: 42px; padding: 12px 20px; border: 0; border-radius: 3px; background: rgba(255,255,255,.45); box-shadow: 0 3px 3px rgba(0,0,0,.24); text-transform: uppercase; cursor: pointer; }
+.hall-tabs button.is-active { min-height: 46px; background: #fff; box-shadow: 0 6px 4px rgba(0,0,0,.24); font-weight: 900; }
+.size-fields { display: flex; gap: 14px; align-items: flex-end; margin: 12px 0 28px; }
+.size-fields input { width: 100px; }
+.size-fields span { padding-bottom: 8px; color: #848484; font-size: 18px; }
+.admin-seat-legend { display: flex; flex-wrap: wrap; gap: 20px; margin: 12px 0; color: #848484; font-size: 14px; }
+.admin-seat-legend span { display: flex; gap: 5px; align-items: center; }
+.admin-seat { display: inline-block; width: 26px; height: 26px; padding: 0; border: 1px solid #393939; border-radius: 4px; background: #c4c4c4; }
+.admin-seat.vip { border-color: #0a828a; background: repeating-linear-gradient(135deg,#b0d6d8,#b0d6d8 2px,#8dc4c7 2px,#8dc4c7 4px); }
+.admin-seat.disabled { border-color: #c4c4c4; background: transparent; }
+.admin-hall { width: min(100%, 720px); margin: 20px auto; padding: 24px; border: 1px solid #000; overflow-x: auto; text-align: center; }
+.admin-hall > strong { display: block; margin-bottom: 12px; letter-spacing: 8px; text-transform: uppercase; }
+.admin-hall__row { display: flex; width: max-content; min-width: 100%; gap: 4px; justify-content: center; margin: 4px 0; }
+.admin-hall__row .admin-seat { flex: 0 0 26px; cursor: pointer; }
+.admin-actions { justify-content: center; margin-top: 20px; }
+.price-fields { display: flex; flex-direction: column; gap: 12px; }
+.price-fields label { display: grid; grid-template-columns: 110px 100px 1fr; align-items: end; gap: 5px; }
+.film-form { display: grid; gap: 8px; margin-bottom: 25px; }
+.film-form textarea { min-height: 80px; resize: vertical; }
+.drag-help { color: #63536c; }
+.film-library { display: flex; flex-wrap: wrap; gap: 15px; margin: 20px 0 30px; }
+.film-chip { position: relative; display: flex; width: 250px; min-height: 52px; border: 1px solid rgba(0,0,0,.3); background: #caff85; cursor: grab; }
+.film-chip--1 { background: #85ff89; }.film-chip--2 { background: #85ffd3; }.film-chip--3 { background: #85e2ff; }.film-chip--4 { background: #8599ff; }
+.film-chip img { width: 38px; object-fit: cover; }
+.film-chip > span { display: flex; min-width: 0; padding: 7px 10px; flex: 1; flex-direction: column; }
+.film-chip strong { overflow: hidden; text-overflow: ellipsis; }
+.film-chip small { margin-top: 4px; }
+.film-chip .icon-button { position: absolute; right: 2px; bottom: 2px; }
+.timeline-row { margin: 18px 0; }
+.timeline-row > strong { text-transform: uppercase; }
+.timeline { position: relative; height: 70px; margin-top: 6px; border: 1px solid #848484; background: rgba(255,255,255,.3); overflow: hidden; }
+.timeline__seance { position: absolute; top: 8px; min-width: 44px; height: 40px; padding: 4px; border: 1px solid rgba(0,0,0,.3); background: #85ff89; cursor: grab; font-size: 10px; }
+.timeline__seance span { display: block; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.timeline__seance time { position: absolute; top: 44px; left: 0; color: #333; font-size: 11px; }
+.seance-trash { margin-top: 25px; padding: 16px; border: 2px dashed #63536c; color: #63536c; text-align: center; }
+.sales-control { text-align: center; }
+
+@media (max-width: 600px) {
+  .page--admin { padding-right: 0; padding-left: 0; }
+  .login-card { width: 100%; }
+  .admin-section::before { left: 20px; }
+  .admin-section__title { min-height: 72px; padding: 24px 50px 23px 67px; font-size: 18px; }
+  .admin-section__title::before { top: 17px; left: 4px; }
+  .admin-section__body { padding: 26px 16px 30px 32px; }
+  .admin-hall { padding: 18px 8px; }
+  .admin-seat { width: 20px; height: 20px; }
+  .admin-hall__row .admin-seat { flex-basis: 20px; }
+  .price-fields label { grid-template-columns: 100px 90px 1fr; }
+  .film-chip { width: 100%; }
+}
