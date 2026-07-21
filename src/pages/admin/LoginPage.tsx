@@ -27,7 +27,7 @@ const LoginPage = () => {
   }
 
   return (
-    <div className="page page--admin">
+    <div className="page page--admin page--admin-login">
       <Header admin />
       <main className="login-card">
         <h1>Авторизация</h1>
