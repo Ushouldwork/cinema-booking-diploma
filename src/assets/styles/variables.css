@@ -1,0 +1,7 @@
+:root {
+  --color-background: #362f2d;
+  --color-surface: rgba(241, 235, 230, 0.95);
+  --color-text: #000000;
+  --color-accent: #16a6af;
+  --content-width: 990px;
+}
