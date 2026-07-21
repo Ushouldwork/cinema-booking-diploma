@@ -50,7 +50,7 @@ const HomePage = () => {
 
   return (
     <div className="page page--guest">
-      <Header />
+      <Header showLogin />
       <DateNavigation
         startDate={startDate}
         selectedDate={selectedDate}
