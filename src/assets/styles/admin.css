@@ -156,6 +156,102 @@
 .seance-trash { margin-top: 25px; padding: 16px; border: 2px dashed #63536c; color: #63536c; text-align: center; }
 .sales-control { text-align: center; }
 
+body.has-modal { overflow: hidden; }
+
+.admin-modal {
+  position: fixed;
+  z-index: 100;
+  inset: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 120px 16px 40px;
+  overflow-y: auto;
+  background: rgba(0, 0, 0, .7);
+}
+
+.admin-modal__dialog {
+  width: min(100%, 960px);
+  background: rgba(234, 233, 235, .98);
+  box-shadow: 0 8px 35px rgba(0, 0, 0, .35);
+}
+
+.admin-modal__header {
+  display: flex;
+  min-height: 57px;
+  padding: 14px 42px;
+  align-items: center;
+  justify-content: space-between;
+  background: #63536c;
+  color: #fff;
+}
+
+.admin-modal__header h2 {
+  margin: 0;
+  font-size: 22px;
+  line-height: 25px;
+  text-transform: uppercase;
+}
+
+.admin-modal__header button {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 28px;
+}
+
+.admin-modal__body { padding: 35px 104px; }
+
+.admin-modal__form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.admin-modal__form label:not(.upload-button) {
+  display: flex;
+  flex-direction: column;
+  color: #848484;
+  font-size: 12px;
+}
+
+.admin-modal__form input:not([type='file']),
+.admin-modal__form textarea,
+.admin-modal__form select {
+  width: 100%;
+  min-height: 36px;
+  padding: 7px 9px;
+  border: 1px solid #b7b7b7;
+  border-radius: 0;
+  background: #fff;
+  color: #000;
+  font-size: 16px;
+}
+
+.admin-modal__form textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+.admin-modal__form--seance { width: min(100%, 752px); }
+
+.admin-modal__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  justify-content: center;
+  margin-top: 34px;
+}
+
+.upload-button { position: relative; cursor: pointer; }
+.upload-button input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+
 @media (max-width: 600px) {
   .page--admin { padding-right: 0; padding-left: 0; }
   .login-card { width: 100%; }
@@ -168,4 +264,23 @@
   .admin-hall__row .admin-seat { flex-basis: 20px; }
   .price-fields label { grid-template-columns: 100px 90px 1fr; }
   .film-chip { width: 100%; }
+  .admin-modal { padding: 120px 0 30px; }
+  .admin-modal__dialog { width: 100%; }
+  .admin-modal__header { padding: 14px 16px; }
+  .admin-modal__header h2 { font-size: 18px; }
+  .admin-modal__body { padding: 30px 16px; }
+  .admin-modal__actions { margin-top: 24px; }
+  .admin-modal__actions .button,
+  .admin-modal__actions .upload-button { width: 100%; }
+  .timeline { min-width: 620px; }
+  .timeline-row { overflow-x: auto; }
+  .timeline-row > strong { position: sticky; left: 0; }
+}
+
+@media (max-width: 360px) {
+  .header__logo { font-size: 30px; }
+  .admin-section__title { padding-right: 38px; padding-left: 58px; font-size: 17px; }
+  .admin-section__body { padding-right: 10px; padding-left: 25px; }
+  .price-fields label { grid-template-columns: 88px 78px 1fr; font-size: 11px; }
+  .admin-seat-legend { gap: 10px; }
 }
