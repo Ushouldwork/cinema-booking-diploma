@@ -1,75 +1,64 @@
-# React + TypeScript + Vite
+# Идём в кино
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Дипломный проект по профессии «Frontend-разработчик»: клиентская и административная части сайта кинотеатра.
 
-Currently, two official plugins are available:
+## Опубликованный проект
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+[Открыть сайт на GitHub Pages](https://ushouldwork.github.io/cinema-booking-diploma/)
 
-## React Compiler
+Административная часть доступна по кнопке «Войти» на главной странице.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Возможности
 
-## Expanding the ESLint configuration
+### Для посетителя
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- просмотр расписания по датам и информации о фильмах;
+- отображение сеансов только в открытых залах;
+- блокировка прошедших сеансов на текущую дату;
+- выбор обычных и VIP-мест по актуальной схеме зала;
+- бронирование одного или нескольких билетов;
+- получение электронного билета с QR-кодом.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+QR-код содержит дату и время сеанса, название фильма, зал, ряд, место, стоимость и фразу «Билет действителен строго на свой сеанс».
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### Для администратора
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- авторизация через API;
+- создание и удаление залов;
+- изменение количества рядов, мест и типов кресел;
+- настройка стоимости обычных и VIP-билетов;
+- добавление и удаление фильмов;
+- создание сеанса перетаскиванием фильма на временную шкалу зала;
+- удаление сеанса перетаскиванием в область удаления;
+- открытие и приостановка продажи билетов.
 
+## Технологии
+
+- React 19;
+- TypeScript;
+- Vite;
+- React Router;
+- CSS, адаптивная вёрстка и БЭМ-подобные классы;
+- Fetch API;
+- библиотека `qrcode`;
+- GitHub Actions и GitHub Pages.
+
+Данные загружаются из API дипломного проекта Netology: `https://shfe-diplom.neto-server.ru`.
+
+## Локальный запуск
+
+```bash
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+После запуска приложение будет доступно по адресу `http://localhost:5173/`.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Проверка проекта
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```bash
+npm run lint
+npm run build
 ```
+
+Интерфейс адаптирован для устройств с шириной экрана от 320 px.
