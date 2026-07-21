@@ -22,20 +22,20 @@ const PaymentPage = () => {
     try {
       setLoading(true)
       setError('')
-      const result = await cinemaApi.buyTickets(
+      const purchasedTickets = await cinemaApi.buyTickets(
         booking.seance.id,
         booking.date,
         booking.seats.map((seat) => ({ row: seat.row, place: seat.place, coast: seat.price })),
       )
-      if (!Array.isArray(result.tickets) || result.tickets.length === 0) {
+      if (purchasedTickets.length === 0) {
         throw new Error('Сервер не вернул данные купленного билета')
       }
 
       // Передаём билеты двумя способами. Состояние маршрута доступно QR-странице
       // сразу, а контекст и sessionStorage сохраняют билет после обновления страницы.
-      sessionStorage.setItem('cinema-purchased-tickets', JSON.stringify(result.tickets))
-      setPurchasedTickets(result.tickets)
-      navigate('/ticket', { replace: true, state: { tickets: result.tickets } })
+      sessionStorage.setItem('cinema-purchased-tickets', JSON.stringify(purchasedTickets))
+      setPurchasedTickets(purchasedTickets)
+      navigate('/ticket', { replace: true, state: { tickets: purchasedTickets } })
     } catch (buyError) {
       setError(buyError instanceof Error ? buyError.message : 'Не удалось забронировать билеты')
     } finally {

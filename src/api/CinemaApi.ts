@@ -136,9 +136,28 @@ class CinemaApi {
     const formData = createFormData({ seanceId, ticketDate })
     formData.set('tickets', JSON.stringify(tickets))
 
-    return this.request<{ tickets: PurchasedTicket[] }>('/ticket', {
+    return this.request<unknown>('/ticket', {
       method: 'POST',
       body: formData,
+    }).then((result) => {
+      if (Array.isArray(result)) {
+        return result as PurchasedTicket[]
+      }
+
+      if (result && typeof result === 'object') {
+        const response = result as {
+          tickets?: PurchasedTicket[] | PurchasedTicket
+          ticket?: PurchasedTicket[] | PurchasedTicket
+          ticket_date?: string
+        }
+        const receivedTickets = response.tickets ?? response.ticket
+
+        if (Array.isArray(receivedTickets)) return receivedTickets
+        if (receivedTickets && typeof receivedTickets === 'object') return [receivedTickets]
+        if (response.ticket_date) return [result as PurchasedTicket]
+      }
+
+      return []
     })
   }
 }
