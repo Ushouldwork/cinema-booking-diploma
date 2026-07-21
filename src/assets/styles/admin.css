@@ -171,7 +171,7 @@ body.has-modal { overflow: hidden; }
   justify-content: center;
   padding: 120px 16px 40px;
   overflow-y: auto;
-  background: rgba(0, 0, 0, .7);
+  background: #171717 url('../images/login-background.jpg') center top / cover no-repeat;
 }
 
 .admin-modal__dialog {
