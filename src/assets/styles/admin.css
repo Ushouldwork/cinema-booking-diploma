@@ -1,6 +1,6 @@
 .page--admin {
   min-height: 100vh;
-  background: linear-gradient(rgba(0, 0, 0, .5), rgba(0, 0, 0, .5)), url('../images/cinema-background.jpg') center top / cover fixed;
+  background: #171717 url('../images/admin-background.png') center top / cover fixed;
 }
 
 .login-card,
