@@ -6,7 +6,7 @@ type HeaderProps = {
 }
 
 const Header = ({ admin = false, showLogin = false }: HeaderProps) => (
-  <header className="header">
+  <header className={`header${admin ? ' header--admin' : ''}`}>
     <div>
       <Link className="header__logo" to={admin ? '/admin' : '/'}>
         Идём<span>в</span>кино

@@ -7,6 +7,14 @@
   background-image: url('../images/login-background.jpg');
 }
 
+@media (min-width: 601px) {
+  .header--admin {
+    width: min(100%, 972px);
+    min-height: 120px;
+    padding: 35px 42px 35px 104px;
+  }
+}
+
 .login-card,
 .admin-panel {
   width: min(100%, 962px);
