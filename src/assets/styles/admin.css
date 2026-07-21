@@ -1,6 +1,6 @@
 .page--admin {
   min-height: 100vh;
-  background: #171717 url('../images/admin-background.png') center top / cover no-repeat;
+  background: #171717 url('../images/admin-background.jpg') center top / cover no-repeat;
 }
 
 .page--admin-login {
