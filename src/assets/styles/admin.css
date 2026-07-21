@@ -167,7 +167,37 @@
 .timeline__seance { position: absolute; top: 8px; min-width: 44px; height: 40px; padding: 4px; border: 1px solid rgba(0,0,0,.3); background: #85ff89; cursor: grab; font-size: 10px; }
 .timeline__seance span { display: block; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 .timeline__seance time { position: absolute; top: 44px; left: 0; color: #333; font-size: 11px; }
-.seance-trash { margin-top: 25px; padding: 16px; border: 2px dashed #63536c; color: #63536c; text-align: center; }
+.seance-trash {
+  position: fixed;
+  z-index: 90;
+  top: 50%;
+  left: max(12px, calc(50% - 610px));
+  display: flex;
+  width: 112px;
+  min-height: 112px;
+  padding: 14px 10px;
+  border: 3px dashed #63536c;
+  border-radius: 8px;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 7px;
+  background: rgba(234, 233, 235, .96);
+  box-shadow: 0 5px 18px rgba(0, 0, 0, .35);
+  color: #63536c;
+  pointer-events: auto;
+  text-align: center;
+  transform: translateY(-50%);
+  animation: seance-trash-in .16s ease-out;
+}
+.seance-trash svg { width: 40px; height: 40px; fill: currentcolor; pointer-events: none; }
+.seance-trash span { font-size: 13px; font-weight: 700; line-height: 16px; pointer-events: none; }
+.seance-trash.is-active { border-style: solid; background: #63536c; box-shadow: 0 0 0 5px rgba(188, 149, 214, .5), 0 5px 18px rgba(0, 0, 0, .35); color: #fff; transform: translateY(-50%) scale(1.08); }
+
+@keyframes seance-trash-in {
+  from { opacity: 0; transform: translate(-18px, -50%) scale(.9); }
+  to { opacity: 1; transform: translate(0, -50%) scale(1); }
+}
 .sales-control { text-align: center; }
 
 body.has-modal { overflow: hidden; }
@@ -316,6 +346,13 @@ body.has-modal { overflow: hidden; }
   .timeline { min-width: 620px; }
   .timeline-row { overflow-x: auto; }
   .timeline-row > strong { position: sticky; left: 0; }
+  .seance-trash { top: auto; right: 16px; bottom: 18px; left: auto; width: 92px; min-height: 92px; transform: none; }
+  .seance-trash.is-active { transform: scale(1.06); }
+
+  @keyframes seance-trash-in {
+    from { opacity: 0; transform: translateY(14px) scale(.9); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
 }
 
 @media (max-width: 360px) {

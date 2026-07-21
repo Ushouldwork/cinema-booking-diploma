@@ -36,6 +36,8 @@ const AdminPage = () => {
   const [modal, setModal] = useState<'hall' | 'film' | 'seance' | null>(null)
   const [pendingSeance, setPendingSeance] = useState({ hallId: 0, filmId: 0, time: '00:00' })
   const [touchFilmId, setTouchFilmId] = useState<number | null>(null)
+  const [draggedSeanceId, setDraggedSeanceId] = useState<number | null>(null)
+  const [isTrashActive, setIsTrashActive] = useState(false)
 
   const selectedHall = useMemo(
     () => data.halls.find((hall) => hall.id === selectedHallId) ?? null,
@@ -190,7 +192,9 @@ const AdminPage = () => {
 
   const deleteSeanceByDrop = (event: DragEvent) => {
     event.preventDefault()
-    const seanceId = Number(event.dataTransfer.getData('seanceId'))
+    const seanceId = Number(event.dataTransfer.getData('seanceId')) || draggedSeanceId
+    setDraggedSeanceId(null)
+    setIsTrashActive(false)
     if (seanceId) void runAction(() => cinemaApi.deleteSeance(seanceId))
   }
 
@@ -277,12 +281,47 @@ const AdminPage = () => {
                 {data.seances.filter((seance) => seance.seance_hallid === hall.id).map((seance) => {
                   const film = data.films.find((item) => item.id === seance.seance_filmid)
                   const [hours, minutes] = seance.seance_time.split(':').map(Number)
-                  return <div className="timeline__seance" draggable onDragStart={(event) => { event.dataTransfer.setData('seanceId', String(seance.id)); event.dataTransfer.effectAllowed = 'move' }} style={{ left: `${((hours * 60 + minutes) / 1440) * 100}%`, width: `${Math.max(5, ((film?.film_duration ?? 60) / 1440) * 100)}%` }} key={seance.id}><span>{film?.film_name}</span><time>{seance.seance_time}</time></div>
+                  return <div
+                    className="timeline__seance"
+                    draggable
+                    onDragStart={(event) => {
+                      event.dataTransfer.setData('seanceId', String(seance.id))
+                      event.dataTransfer.effectAllowed = 'move'
+                      setDraggedSeanceId(seance.id)
+                    }}
+                    onDragEnd={() => {
+                      setDraggedSeanceId(null)
+                      setIsTrashActive(false)
+                    }}
+                    style={{ left: `${((hours * 60 + minutes) / 1440) * 100}%`, width: `${Math.max(5, ((film?.film_duration ?? 60) / 1440) * 100)}%` }}
+                    key={seance.id}
+                  ><span>{film?.film_name}</span><time>{seance.seance_time}</time></div>
                 })}
               </div>
             </div>
           ))}</div>
-          <div className="seance-trash" onDragOver={(event) => event.preventDefault()} onDrop={deleteSeanceByDrop}>Перетащите сюда сеанс, чтобы удалить</div>
+          {draggedSeanceId !== null && (
+            <div
+              className={`seance-trash${isTrashActive ? ' is-active' : ''}`}
+              role="region"
+              aria-label="Удалить сеанс"
+              onDragEnter={(event) => {
+                event.preventDefault()
+                setIsTrashActive(true)
+              }}
+              onDragLeave={() => setIsTrashActive(false)}
+              onDragOver={(event) => {
+                event.preventDefault()
+                event.dataTransfer.dropEffect = 'move'
+              }}
+              onDrop={deleteSeanceByDrop}
+            >
+              <svg aria-hidden="true" viewBox="0 0 24 24">
+                <path d="M8 3h8l1 2h4v2H3V5h4l1-2Zm-2 6h12l-1 12H7L6 9Zm3 2v7h2v-7H9Zm4 0v7h2v-7h-2Z" />
+              </svg>
+              <span>Удалить сеанс</span>
+            </div>
+          )}
         </AdminSection>
 
         <AdminSection title="Открыть продажи">
